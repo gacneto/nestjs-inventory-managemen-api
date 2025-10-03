@@ -1,0 +1,13 @@
+FROM node:18-alpine
+
+WORKDIR /usr/src/app
+
+# Instala apenas as dependências. O código fonte será montado via volume.
+COPY package*.json ./
+RUN npm install
+
+# Expõe a porta
+EXPOSE 3000
+
+# Comando para iniciar em modo de desenvolvimento (com watch)
+CMD ["npm", "run", "start:dev"]

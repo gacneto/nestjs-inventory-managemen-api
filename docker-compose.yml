@@ -1,0 +1,35 @@
+services:
+  # Serviço da API NestJS
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev # Usa o Dockerfile de desenvolvimento
+    container_name: coffee_shop_api
+    volumes:
+      - .:/usr/src/app # Monta o código fonte para hot-reload
+      - /usr/src/app/node_modules # Garante que o node_modules do container seja usado
+    ports:
+      - '${API_PORT}:${API_PORT}' # Mapeia a porta do host para o container
+    depends_on:
+      - db # Garante que o banco de dados inicie antes da API
+    env_file:
+      - .env # Carrega as variáveis de ambiente
+    environment:
+      - NODE_ENV=production
+
+  # Serviço do Banco de Dados PostgreSQL
+  db:
+    image: postgres:15-alpine
+    container_name: coffee_shop_db
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - '${DB_PORT}:5432' # Mapeia a porta do banco para acesso externo (ex: DBeaver)
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Volume para persistir os dados
+
+volumes:
+  postgres_data:
+    driver: local
