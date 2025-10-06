@@ -19,6 +19,7 @@ import {
   ApiTags,
   ApiOperation,
   ApiResponse,
+  ApiParam,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/modules/auth/guards/roles.guard';
@@ -94,5 +95,22 @@ export class ProductsController {
   })
   remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
     return this.productsService.remove(id);
+  }
+
+  @Post(':id/restore')
+  @Roles(UserRole.ADMIN)
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Restaura um produto que foi deletado (soft delete)',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'ID do produto a ser restaurado',
+    type: 'string',
+  })
+  @ApiResponse({ status: 200, description: 'Produto restaurado com sucesso.' })
+  @ApiResponse({ status: 404, description: 'Produto não encontrado.' })
+  restore(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
+    return this.productsService.restore(id);
   }
 }

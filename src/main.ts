@@ -23,6 +23,8 @@ async function bootstrap() {
     .setVersion('1.0')
     .addTag('auth', 'Operações realacionadas a autenticação')
     .addTag('products', 'Operações relacionadas a produtos')
+    .addTag('inventory', 'Operações relacionadas ao inventário')
+    .addTag('reports', 'Operações relacionadas a registro de movimentação')
     .addBearerAuth()
     .build();
 

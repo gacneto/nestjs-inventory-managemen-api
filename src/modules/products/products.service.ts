@@ -64,9 +64,19 @@ export class ProductsService {
   }
 
   async remove(id: string): Promise<void> {
-    const result = await this.productRepository.delete(id);
+    const result = await this.productRepository.softDelete(id);
     if (result.affected === 0) {
       throw new NotFoundException(`Product with ID "${id}" not found`);
+    }
+  }
+
+  async restore(id: string): Promise<void> {
+    const restoreResult = await this.productRepository.restore(id);
+
+    if (restoreResult.affected === 0) {
+      throw new NotFoundException(
+        `Produto com ID "${id}" não encontrado ou não está deletado.`,
+      );
     }
   }
 }
